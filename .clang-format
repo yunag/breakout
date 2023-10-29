@@ -1,0 +1,6 @@
+BasedOnStyle: LLVM
+IndentWidth: 2
+TabWidth: 2
+ColumnLimit: 80
+SortIncludes: false
+Standard: Cpp11

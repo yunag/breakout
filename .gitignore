@@ -1,0 +1,8 @@
+build/
+.cache/
+.vscode/
+imgui.ini
+compile_commands.json
+
+*.o
+*.bat
