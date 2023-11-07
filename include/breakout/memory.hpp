@@ -2,7 +2,6 @@
 #define YU_MEMORY_H
 
 #include <string>
-#include <ctype.h>
 
 namespace Memory {
 std::string read_file(const std::string &filepath);

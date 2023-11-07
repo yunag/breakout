@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef YU_SHADER_H
+#define YU_SHADER_H
 
 #include <glm/mat3x3.hpp>
 #include <glm/mat4x4.hpp>
@@ -48,4 +48,4 @@ private:
   LocationCacheMap m_location_cache;
 };
 
-#endif /* !SHADER_H */
+#endif /* !YU_SHADER_H */

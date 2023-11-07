@@ -12,27 +12,57 @@ class Shader;
 class ResourceManager {
 public:
   using ShaderMap = std::unordered_map<std::string, std::shared_ptr<Shader>>;
-  using TextureMap = std::unordered_map<std::string, Texture2D>;
+  using TextureMap =
+      std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
 
-  ResourceManager() = delete;
+public:
+  ResourceManager(const ResourceManager &) = delete;
+  ResourceManager(ResourceManager &&) = delete;
+  ResourceManager &operator=(const ResourceManager &) = delete;
+  ResourceManager &operator=(ResourceManager &&) = delete;
+  static ResourceManager &get() {
+    static ResourceManager rmanager;
+    return rmanager;
+  };
+
   static std::shared_ptr<Shader> load_shader(const char *name,
                                              const char *vert_path,
                                              const char *frag_path,
-                                             const char *geom_path = nullptr);
-  static std::shared_ptr<Shader> shader(const char *name);
-  static Texture2D &texture(const char *name);
-  static Texture2D &load_texture(const char *name, const char *path,
-                                 bool alpha);
-
-  /* Deallocate all loaded resources */
-  static void clear();
+                                             const char *geom_path = nullptr) {
+    return ResourceManager::get().load_shader_impl(name, vert_path, frag_path,
+                                                   geom_path);
+  }
+  static std::shared_ptr<Shader> shader(const char *name) {
+    return ResourceManager::get().shader_impl(name);
+  }
+  static std::shared_ptr<Texture2D> texture(const char *name) {
+    return ResourceManager::get().texture_impl(name);
+  }
+  static std::shared_ptr<Texture2D> load_texture(const char *name,
+                                                 const char *path, bool alpha) {
+    return ResourceManager::get().load_texture_impl(name, path, alpha);
+  }
+  static void clear() { return ResourceManager::get().clear_impl(); }
 
 private:
-  static Texture2D load_texture_from_file(const char *file, bool alpha);
+  ResourceManager() {}
+
+  std::shared_ptr<Shader> load_shader_impl(const char *name,
+                                           const char *vert_path,
+                                           const char *frag_path,
+                                           const char *geom_path = nullptr);
+  std::shared_ptr<Shader> shader_impl(const char *name);
+  std::shared_ptr<Texture2D> texture_impl(const char *name);
+  std::shared_ptr<Texture2D> load_texture_impl(const char *name,
+                                               const char *path, bool alpha);
+  void clear_impl();
+
+  std::shared_ptr<Texture2D> load_texture_from_file(const char *file,
+                                                    bool alpha);
 
 private:
-  static ShaderMap m_shaders;
-  static TextureMap m_textures;
+  ShaderMap m_shaders;
+  TextureMap m_textures;
 };
 
 #endif /* !YU_RESOURCE_MANAGER_H */

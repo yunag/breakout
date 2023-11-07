@@ -1,15 +1,21 @@
+#ifndef YU_SPRITE_RENDERER_H
+#define YU_SPRITE_RENDERER_H
+
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include <cstdint>
 #include <memory>
 
-#include "shader.hpp"
-
 class Texture2D;
+class Shader;
 
 class SpriteRenderer {
 public:
+  SpriteRenderer(const SpriteRenderer &) = delete;
+  SpriteRenderer(SpriteRenderer &&) = delete;
+  SpriteRenderer &operator=(const SpriteRenderer &) = delete;
+  SpriteRenderer &operator=(SpriteRenderer &&) = delete;
   SpriteRenderer(std::shared_ptr<Shader> shader);
   ~SpriteRenderer();
 
@@ -23,4 +29,7 @@ private:
 private:
   std::shared_ptr<Shader> m_shader;
   uint32_t m_quad_vao;
+  uint32_t m_quad_vbo;
 };
+
+#endif /* !YU_SPRITE_RENDERER_H */

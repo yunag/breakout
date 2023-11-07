@@ -55,7 +55,7 @@ void Texture2D::generate(uint32_t width, uint32_t height, unsigned char *data) {
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture2D::set_internal_format(uint32_t format) {
+void Texture2D::set_internal_format(int32_t format) {
   m_internal_format = format;
 }
 

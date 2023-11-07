@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.22...3.25)
 project(Breakout VERSION 0.0.1 LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 14)
 
 set(COMPILE_OPTS -Wall -Wextra -pedantic -ggdb)
 
@@ -20,6 +18,7 @@ endif()
 
 # Set up dependencies
 add_subdirectory(deps)
+
 set(INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_subdirectory(src)
