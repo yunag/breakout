@@ -14,7 +14,11 @@ public:
     SHAKE = 0,
     CHAOS,
     CONFUSE,
+    LAST_EFFECT = CONFUSE,
   };
+
+  static constexpr size_t EFFECTS_COUNT =
+      static_cast<size_t>(Effect::LAST_EFFECT) + 1;
 
 public:
   PostProcessor(const PostProcessor &) = delete;
@@ -30,7 +34,7 @@ public:
   void enable_effect(Effect effect);
   void disable_effect(Effect effect);
 
-  bool is_effect_enabled(Effect effect);
+  bool is_effect_enabled(Effect effect) const;
 
 private:
   void init_render_data();
@@ -40,7 +44,8 @@ private:
   std::shared_ptr<Shader> m_shader;
   Texture2D m_texture;
   uint32_t m_width, m_height;
-  bool m_confuse, m_chaos, m_shake;
+
+  bool m_effects[EFFECTS_COUNT] = {false};
 
   uint32_t m_msfbo, m_fbo;
   uint32_t m_rbo;

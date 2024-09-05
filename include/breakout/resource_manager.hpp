@@ -20,6 +20,10 @@ public:
   ResourceManager(ResourceManager &&) = delete;
   ResourceManager &operator=(const ResourceManager &) = delete;
   ResourceManager &operator=(ResourceManager &&) = delete;
+
+  static void load_resources() {
+    return ResourceManager::get().load_resources_impl();
+  }
   static ResourceManager &get() {
     static ResourceManager rmanager;
     return rmanager;
@@ -47,6 +51,7 @@ public:
 private:
   ResourceManager() {}
 
+  void load_resources_impl();
   std::shared_ptr<Shader> load_shader_impl(const char *name,
                                            const char *vert_path,
                                            const char *frag_path,

@@ -9,6 +9,7 @@ class Player : public GameObject {
 public:
   static constexpr float INITIAL_VELOCITY = 500.0f;
   static constexpr glm::vec2 INITIAL_SIZE = glm::vec2(100.0f, 20.0f);
+  static constexpr int INITIAL_NUM_LIVES = 3;
 
 public:
   using GameObject::GameObject;

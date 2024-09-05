@@ -4,7 +4,7 @@ add_executable(${PROJECT_NAME}
   memory.cpp input.cpp spriterenderer.cpp
   gameobject.cpp gamelevel.cpp ballobject.cpp
   particle.cpp postprocessor.cpp powerup.cpp
-  textrenderer.cpp
+  textrenderer.cpp audio.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

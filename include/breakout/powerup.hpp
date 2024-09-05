@@ -31,12 +31,12 @@ public:
   void set_activated(bool is_powerup_activated) {
     m_activated = is_powerup_activated;
   }
-  bool is_activated() { return m_activated; }
+  bool is_activated() const { return m_activated; }
 
   void set_duration(float duration) { m_duration = duration; }
-  float duration() { return m_duration; }
+  float duration() const { return m_duration; }
 
-  PowerUpType type() { return m_type; }
+  PowerUpType type() const { return m_type; }
 
 private:
   PowerUpType m_type;

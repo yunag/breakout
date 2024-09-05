@@ -7,8 +7,7 @@
 
 PostProcessor::PostProcessor(std::shared_ptr<Shader> shader, uint32_t width,
                              uint32_t height)
-    : m_shader(shader), m_texture(), m_width(width), m_height(height),
-      m_confuse(false), m_chaos(false), m_shake(false) {
+    : m_shader(shader), m_texture(), m_width(width), m_height(height) {
   glGenFramebuffers(1, &m_msfbo);
   glGenFramebuffers(1, &m_fbo);
   glGenRenderbuffers(1, &m_rbo);
@@ -54,9 +53,9 @@ PostProcessor::PostProcessor(std::shared_ptr<Shader> shader, uint32_t width,
       {0.0f, -offset},    // bottom-center
       {offset, -offset}   // bottom-right
   };
+
   glUniform2fv(glGetUniformLocation(m_shader->id(), "offsets"), 9,
                (float *)offsets);
-
   int edge_kernel[9] = {
       -1, -1, -1, //
       -1, 8,  -1, //
@@ -89,17 +88,30 @@ void PostProcessor::end_render() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+static const char *effect_type_to_str(PostProcessor::Effect effect) {
+  switch (effect) {
+  case PostProcessor::Effect::SHAKE:
+    return "shake";
+  case PostProcessor::Effect::CHAOS:
+    return "chaos";
+  case PostProcessor::Effect::CONFUSE:
+    return "confuse";
+  }
+}
+
 void PostProcessor::render(float time) {
   m_shader->bind();
   m_shader->setf("time", time);
-  m_shader->seti("confuse", m_confuse);
-  m_shader->seti("chaos", m_chaos);
-  m_shader->seti("shake", m_shake);
+
+  for (size_t i = 0; i < EFFECTS_COUNT; ++i) {
+    m_shader->seti(effect_type_to_str(static_cast<Effect>(i)), m_effects[i]);
+  }
 
   glActiveTexture(GL_TEXTURE0);
   m_texture.bind();
+
   glBindVertexArray(m_vao);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   glBindVertexArray(0);
 }
 
@@ -107,12 +119,9 @@ void PostProcessor::init_render_data() {
   float vertices[] = {
       // pos        // tex
       -1.0f, -1.0f, 0.0f, 0.0f, //
-      1.0f, 1.0f, 1.0f, 1.0f,   //
-      -1.0f, 1.0f, 0.0f, 1.0f,  //
-                                //
-      -1.0f, -1.0f, 0.0f, 0.0f, //
-      1.0f, -1.0f, 1.0f, 0.0f,  //
-      1.0f, 1.0f, 1.0f, 1.0f    //
+      1.0f,  -1.0f, 1.0f, 0.0f, //
+      -1.0f, 1.0f,  0.0f, 1.0f, //
+      1.0f,  1.0f,  1.0f, 1.0f  //
   };
   uint32_t vbo;
   glGenVertexArrays(1, &m_vao);
@@ -128,24 +137,13 @@ void PostProcessor::init_render_data() {
   glBindVertexArray(0);
 }
 
-bool &PostProcessor::get_effect_field(Effect effect) {
-  switch (effect) {
-  case PostProcessor::Effect::SHAKE:
-    return m_shake;
-  case PostProcessor::Effect::CHAOS:
-    return m_chaos;
-  case PostProcessor::Effect::CONFUSE:
-    return m_confuse;
-  }
-}
-
 void PostProcessor::enable_effect(Effect effect) {
-  get_effect_field(effect) = true;
+  m_effects[static_cast<size_t>(effect)] = true;
 }
 void PostProcessor::disable_effect(Effect effect) {
-  get_effect_field(effect) = false;
+  m_effects[static_cast<size_t>(effect)] = false;
 }
 
-bool PostProcessor::is_effect_enabled(Effect effect) {
-  return get_effect_field(effect);
+bool PostProcessor::is_effect_enabled(Effect effect) const {
+  return m_effects[static_cast<size_t>(effect)];
 }

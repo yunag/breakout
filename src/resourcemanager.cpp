@@ -9,6 +9,56 @@
 #include "breakout/shader.hpp"
 #include "breakout/texture2d.hpp"
 
+void ResourceManager::load_resources_impl() {
+  /* TODO: Use json format to load all necessary data */
+
+  struct TextureInfo {
+    const char *name;
+    const char *filename;
+    bool alpha;
+  };
+
+  std::vector<TextureInfo> texture_infos = {
+      {"background", "res/textures/background.jpg", false},
+      {"face", "res/textures/awesomeface.png", true},
+      {"block", "res/textures/block.png", false},
+      {"block_solid", "res/textures/block_solid.png", false},
+      {"paddle", "res/textures/paddle.png", true},
+      {"particle", "res/textures/particle.png", true},
+      {"powerup_speed", "res/textures/powerup_speed.png", true},
+      {"powerup_sticky", "res/textures/powerup_sticky.png", true},
+      {"powerup_increase", "res/textures/powerup_increase.png", true},
+      {"powerup_confuse", "res/textures/powerup_confuse.png", true},
+      {"powerup_chaos", "res/textures/powerup_chaos.png", true},
+      {"powerup_passthrough", "res/textures/powerup_passthrough.png", true},
+  };
+
+  for (TextureInfo &tinfo : texture_infos) {
+    ResourceManager::load_texture(tinfo.name, tinfo.filename, tinfo.alpha);
+  }
+
+  struct ShaderInfo {
+    const char *name;
+    const char *vert_path;
+    const char *frag_path;
+    const char *geom_path = nullptr;
+  };
+
+  std::vector<ShaderInfo> shader_infos = {
+      {"sprite", "res/shaders/vert/sprite.glsl",
+       "res/shaders/frag/sprite.glsl"},
+      {"particle", "res/shaders/vert/particle.glsl",
+       "res/shaders/frag/particle.glsl"},
+      {"postprocessing", "res/shaders/vert/post_processing.glsl",
+       "res/shaders/frag/post_processing.glsl"},
+  };
+
+  for (ShaderInfo &sinfo : shader_infos) {
+    ResourceManager::load_shader(sinfo.name, sinfo.vert_path, sinfo.frag_path,
+                                 sinfo.geom_path);
+  }
+}
+
 std::shared_ptr<Shader>
 ResourceManager::load_shader_impl(const char *name, const char *vert_path,
                                   const char *frag_path,

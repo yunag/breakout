@@ -13,8 +13,8 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<Shader> shader) {
 }
 
 SpriteRenderer::~SpriteRenderer() {
-  glDeleteVertexArrays(1, &m_quad_vao);
   glDeleteBuffers(1, &m_quad_vbo);
+  glDeleteVertexArrays(1, &m_quad_vao);
 }
 
 void SpriteRenderer::draw(Texture2D &texture, glm::vec2 position,

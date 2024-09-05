@@ -7,6 +7,7 @@
 
 #include <glm/vec2.hpp>
 
+/* Forward declarations */
 class ParticleGenerator;
 class SpriteRenderer;
 class GameLevel;
@@ -16,9 +17,8 @@ class PostProcessor;
 class PowerUp;
 class TextRenderer;
 class Player;
-
-struct ma_engine;
-struct ma_sound;
+class AudioEngine;
+class Sound;
 
 enum class GameState {
   ACTIVE = 0,
@@ -49,19 +49,14 @@ public:
   void render();
 
 private:
-  bool init_audio_engine();
-  void destroy_audio_engine();
-
-  void load_textures();
-  void load_shaders();
   void load_levels();
 
-  void spawn_powerups(GameObject &block);
+  void spawn_powerups(glm::vec2 position);
   void update_powerups(float dt);
 
   void resolve_collisions();
   void resolve_box_collisions();
-  void resolve_poweup_collisions();
+  void resolve_powerup_collisions();
   void resolve_player_collisions();
 
   void activate_powerup(PowerUp &power_up);
@@ -83,9 +78,9 @@ private:
   std::unique_ptr<Player> m_player;
   std::unique_ptr<BallObject> m_ball;
 
-  std::unique_ptr<ma_engine> m_audio_engine;
-  std::unique_ptr<ma_sound> m_main_theme;
-  std::unique_ptr<ma_sound> m_paddle_sound;
+  std::unique_ptr<AudioEngine> m_audio_engine;
+  std::unique_ptr<Sound> m_main_theme;
+  std::unique_ptr<Sound> m_paddle_sound;
 
   float m_shake_time = 0;
 
